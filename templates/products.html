@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class="mb-4">Products</h1>
+
+<div class="row mb-3">
+
+    <div class="col-md-8">
+
+        <form method="GET" action="/products">
+
+            <div class="input-group">
+
+                <input
+                    type="text"
+                    class="form-control"
+                    name="search"
+                    placeholder="Search by barcode, product code or name"
+                    value="{{ request.args.get('search', '') }}">
+
+                <button
+                    class="btn btn-primary"
+                    type="submit">
+
+                    Search
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <div class="col-md-4 text-end">
+
+        <a href="/add-product" class="btn btn-success">
+
+            Add Product
+
+        </a>
+
+    </div>
+
+</div>
+
+<table class="table table-striped table-hover align-middle">
+
+    <thead class="table-dark">
+
+        <tr>
+
+            <th>Barcode</th>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Supplier</th>
+            <th>Location</th>
+            <th>Stock</th>
+            <th>Reorder</th>
+            <th>Cost</th>
+            <th width="320">Actions</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+    {% if products %}
+
+        {% for product in products %}
+
+        <tr>
+
+            <td>{{ product.barcode }}</td>
+
+            <td>{{ product.product_code }}</td>
+
+            <td>{{ product.name }}</td>
+
+            <td>{{ product.category }}</td>
+
+            <td>{{ product.supplier }}</td>
+
+            <td>{{ product.location }}</td>
+
+            <td>
+
+                {% if product.stock_quantity <= product.reorder_level %}
+
+                    <span class="badge bg-danger">
+
+                        {{ product.stock_quantity }}
+
+                    </span>
+
+                {% else %}
+
+                    <span class="badge bg-success">
+
+                        {{ product.stock_quantity }}
+
+                    </span>
+
+                {% endif %}
+
+            </td>
+
+            <td>{{ product.reorder_level }}</td>
+
+            <td>£{{ "%.2f"|format(product.cost_price) }}</td>
+
+            <td>
+
+                <!-- Stock In -->
+
+                <form
+                    action="/stock-in/{{ product.id }}"
+                    method="POST"
+                    style="display:inline;">
+
+                    <input
+                        type="number"
+                        name="quantity"
+                        value="1"
+                        min="1"
+                        style="width:60px;">
+
+                    <button
+                        class="btn btn-success btn-sm">
+
+                        +
+
+                    </button>
+
+                </form>
+
+                <!-- Stock Out -->
+
+                <form
+                    action="/stock-out/{{ product.id }}"
+                    method="POST"
+                    style="display:inline;">
+
+                    <input
+                        type="number"
+                        name="quantity"
+                        value="1"
+                        min="1"
+                        style="width:60px;">
+
+                    <button
+                        class="btn btn-warning btn-sm">
+
+                        -
+
+                    </button>
+
+                </form>
+
+                <!-- Edit -->
+
+                <a
+                    href="/edit-product/{{ product.id }}"
+                    class="btn btn-primary btn-sm">
+
+                    Edit
+
+                </a>
+
+                <!-- Delete -->
+
+                <a
+                    href="/delete-product/{{ product.id }}"
+                    class="btn btn-danger btn-sm"
+                    onclick="return confirm('Delete this product?');">
+
+                    Delete
+
+                </a>
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    {% else %}
+
+        <tr>
+
+            <td colspan="10" class="text-center">
+
+                No products found.
+
+            </td>
+
+        </tr>
+
+    {% endif %}
+
+    </tbody>
+
+</table>
+
+{% endblock %}
