@@ -64,3 +64,38 @@ footer {
     background: #ececec;
     padding: 20px;
 }
+
+@media print {
+
+    .navbar,
+    footer,
+    .no-print {
+        display: none !important;
+    }
+
+    body {
+        background: white;
+        font-size: 12px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        border: 1px solid black !important;
+        padding: 4px !important;
+    }
+
+    .table-dark th {
+        background: #ddd !important;
+        color: black !important;
+    }
+
+    .print-header {
+        display: block;
+        margin-bottom: 20px;
+    }
+}

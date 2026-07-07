@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4 no-print">
+
+    <h1>Current Stock Sheet</h1>
+
+    <button onclick="window.print()" class="btn btn-primary">
+        Print Stock Sheet
+    </button>
+
+</div>
+
+<div class="print-header">
+
+    <h1>StockFlow Current Stock Sheet</h1>
+
+    <p>
+        Generated on: {{ current_date }}
+    </p>
+
+</div>
+
+<div class="row mb-3 no-print">
+
+    <div class="col-md-6">
+        <div class="card p-3">
+            <strong>Total Products:</strong> {{ total_items }}
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card p-3">
+            <strong>Total Stock Value:</strong>
+            £{{ "%.2f"|format(total_stock_value) }}
+        </div>
+    </div>
+
+</div>
+
+<table class="table table-bordered table-sm">
+
+    <thead class="table-dark">
+        <tr>
+            <th>Location</th>
+            <th>Barcode</th>
+            <th>Product Code</th>
+            <th>Product Name</th>
+            <th>Supplier</th>
+            <th>Current Stock</th>
+            <th>Reorder Level</th>
+            <th>Checked Qty</th>
+            <th>Initials</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+    {% for product in products %}
+
+        <tr>
+            <td>{{ product.location }}</td>
+            <td>{{ product.barcode }}</td>
+            <td>{{ product.product_code }}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.supplier }}</td>
+            <td>{{ product.stock_quantity }}</td>
+            <td>{{ product.reorder_level }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+<a href="/products" class="btn btn-secondary no-print">
+    Back to Products
+</a>
+
+{% endblock %}
