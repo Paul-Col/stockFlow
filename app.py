@@ -97,7 +97,7 @@ def dashboard():
     chart_labels = list(monthly_counts.keys())
     chart_data = list(monthly_counts.values())
 
-    # Send data to template
+    # Send data to
     return render_template(
         "dashboard.html",
         total_products=total_products,
