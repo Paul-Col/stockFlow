@@ -62,30 +62,49 @@ class StockMovement(db.Model):
 # Dashboard page
 @app.route("/")
 def dashboard():
-
-    # Get all products from the database
+    # Get all products from database
     products = Product.query.all()
 
-    # Count the total number of products
+    # Count total numberf of products
     total_products = len(products)
 
-    # Find products below the reorder levels
+    # Find products with low stock
     low_stock = Product.query.filter(
         Product.stock_quantity <= Product.reorder_level
     ).all()
 
-    # Calculate the total value of stock
+    # Calculate low value of stock
     stock_value = 0
 
     for product in products:
         stock_value += product.stock_quantity * product.cost_price
 
-    # Send data to dashboard template
+    # Get all the stock movements
+    movements = StockMovement.query.all()
+
+    # store number of monthly movements
+    monthly_counts = {}
+
+    for movement in movements:
+        month = movement.date.strftime("%b %Y")
+
+        if month not in monthly_counts:
+            monthly_counts[month] = 0
+
+        monthly_counts[month] += 1
+
+    # Prepare chart labels
+    chart_labels = list(monthly_counts.keys())
+    chart_data = list(monthly_counts.values())
+
+    # Send data to template
     return render_template(
         "dashboard.html",
         total_products=total_products,
         low_stock=low_stock,
-        stock_value=stock_value
+        stock_value=stock_value,
+        chart_labels=chart_labels,
+        chart_data=chart_data
     )
 
 
