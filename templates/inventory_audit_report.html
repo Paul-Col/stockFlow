@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4 no-print">
+
+    <h1>Inventory Audit Report</h1>
+
+    <button onclick="window.print()" class="btn btn-primary">
+        🖨 Print 
+    </button>
+
+</div>
+
+<div class="print-header">
+
+    <h2>StockFlow Inventory Management</h2>
+
+    <p>Generated: {{ current_date }}</p>
+
+</div>
+
+<div class="row mb-4 no-print">
+
+    <div class="col-md-4">
+
+        <div class="card p-3">
+
+            <strong>Total Products</strong>
+
+            <h3>{{ products|length }}</h3>
+
+        </div>
+
+    </div>
+
+</div>
+
+<table class="table table-bordered table-striped">
+
+    <thead class="table-dark">
+
+        <tr>
+
+            <th>Location</th>
+            <th>Barcode</th>
+            <th>Part Number</th>
+            <th>Description</th>
+            <th>System Qty</th>
+            <th>Counted Qty</th>
+            <th>Variance</th>
+            <th>Auditor Initials</th>
+            <th>Comments</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+    {% for product in products %}
+
+        <tr>
+
+            <td>{{ product.location }}</td>
+
+            <td>{{ product.barcode }}</td>
+
+            <td>{{ product.product_code }}</td>
+
+            <td>{{ product.name }}</td>
+
+            <td>{{ product.stock_quantity }}</td>
+
+            <td style="height:35px;"></td>
+
+            <td></td>
+
+            <td></td>
+
+            <td></td>
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+<div class="row mt-5">
+
+    <div class="col-md-6">
+
+        <strong>Audited By:</strong>
+
+        <hr>
+
+    </div>
+
+    <div class="col-md-6">
+
+        <strong>Date:</strong>
+
+        <hr>
+
+    </div>
+
+</div>
+
+<div class="mt-4">
+
+    <strong>Supervisor Approval:</strong>
+
+    <hr>
+
+</div>
+
+<a href="/" class="btn btn-secondary no-print">
+
+    Back to Dashboard
+
+</a>
+
+{% endblock %}

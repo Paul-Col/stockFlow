@@ -7,19 +7,14 @@
     <h1>Current Stock Sheet</h1>
 
     <button onclick="window.print()" class="btn btn-primary">
-        Print Stock Sheet
+        🖨 Print
     </button>
 
 </div>
 
 <div class="print-header">
-
-    <h1>StockFlow Current Stock Sheet</h1>
-
-    <p>
-        Generated on: {{ current_date }}
-    </p>
-
+    <h2>StockFlow Inventory Management</h2>
+    <p>Generated on {{ current_date }}</p>
 </div>
 
 <div class="row mb-3 no-print">
@@ -50,8 +45,6 @@
             <th>Supplier</th>
             <th>Current Stock</th>
             <th>Reorder Level</th>
-            <th>Checked Qty</th>
-            <th>Initials</th>
         </tr>
     </thead>
 
@@ -67,8 +60,6 @@
             <td>{{ product.supplier }}</td>
             <td>{{ product.stock_quantity }}</td>
             <td>{{ product.reorder_level }}</td>
-            <td></td>
-            <td></td>
         </tr>
 
     {% endfor %}
@@ -77,8 +68,8 @@
 
 </table>
 
-<a href="/products" class="btn btn-secondary no-print">
-    Back to Products
+<a href="/" class="btn btn-secondary no-print">
+    Back to Dashboard
 </a>
 
 {% endblock %}

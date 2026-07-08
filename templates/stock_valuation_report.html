@@ -4,7 +4,7 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4 no-print">
 
-    <h1>Low Stock Report</h1>
+    <h1>Stock Valuation Report</h1>
 
     <button onclick="window.print()" class="btn btn-primary">
         🖨 Print
@@ -13,24 +13,24 @@
 </div>
 
 <div class="print-header">
-
     <h2>StockFlow Inventory Management</h2>
     <p>Generated on {{ current_date }}</p>
-
 </div>
 
 <div class="row mb-4 no-print">
 
     <div class="col-md-6">
-
         <div class="card p-3">
-
-            <strong>Products Below Reorder Level</strong>
-
-            <h3>{{ products|length }}</h3>
-
+            <strong>Total Stock Value</strong>
+            <h3>£{{ "%.2f"|format(total_value) }}</h3>
         </div>
+    </div>
 
+    <div class="col-md-6">
+        <div class="card p-3">
+            <strong>Total Product Lines</strong>
+            <h3>{{ products|length }}</h3>
+        </div>
     </div>
 
 </div>
@@ -38,19 +38,15 @@
 <table class="table table-striped table-bordered">
 
     <thead class="table-dark">
-
         <tr>
-
-            <th>Barcode</th>
-            <th>Code</th>
+            <th>Product Code</th>
             <th>Product</th>
+            <th>Category</th>
             <th>Supplier</th>
-            <th>Location</th>
-            <th>Current Stock</th>
-            <th>Reorder Level</th>
-
+            <th>Stock Qty</th>
+            <th>Unit Cost</th>
+            <th>Total Value</th>
         </tr>
-
     </thead>
 
     <tbody>
@@ -58,29 +54,15 @@
     {% for product in products %}
 
         <tr>
-
-            <td>{{ product.barcode }}</td>
-
             <td>{{ product.product_code }}</td>
-
             <td>{{ product.name }}</td>
-
+            <td>{{ product.category }}</td>
             <td>{{ product.supplier }}</td>
-
-            <td>{{ product.location }}</td>
-
+            <td>{{ product.stock_quantity }}</td>
+            <td>£{{ "%.2f"|format(product.cost_price) }}</td>
             <td>
-
-                <span class="badge bg-danger">
-
-                    {{ product.stock_quantity }}
-
-                </span>
-
+                £{{ "%.2f"|format(product.stock_quantity * product.cost_price) }}
             </td>
-
-            <td>{{ product.reorder_level }}</td>
-
         </tr>
 
     {% endfor %}
@@ -90,19 +72,13 @@
 </table>
 
 {% if products|length == 0 %}
-
-<div class="alert alert-success">
-
-    No products are currently below their reorder level.
-
+<div class="alert alert-info">
+    No products found.
 </div>
-
 {% endif %}
 
 <a href="/" class="btn btn-secondary no-print">
-
     Back to Dashboard
-
 </a>
 
 {% endblock %}

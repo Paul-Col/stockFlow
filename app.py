@@ -215,13 +215,17 @@ def stock_sheet():
 
 @app.route("/reports/low-stock")
 def low_stock_report():
+
     products = Product.query.filter(
         Product.stock_quantity <= Product.reorder_level
     ).order_by(Product.name).all()
 
+    current_date = datetime.now().strftime("%d/%m/%Y %H:%M")
+
     return render_template(
         "low_stock_report.html",
-        products=products
+        products=products,
+        current_date=current_date
     )
 
 
@@ -234,44 +238,85 @@ def stock_valuation_report():
     for product in products:
         total_value += product.stock_quantity * product.cost_price
 
+    current_date = datetime.now().strftime("%d/%m/%Y %H:%M")
+
     return render_template(
         "stock_valuation_report.html",
         products=products,
-        total_value=total_value
+        total_value=total_value,
+        current_date=current_date
     )
 
-
-@app.route("/reports/stock-movements")
+@app.route("/reports/stock-movements", methods=["GET"])
 def stock_movement_report():
-    movements = StockMovement.query.order_by(
+
+    query = StockMovement.query.join(Product)
+
+    start_date = request.args.get("start_date")
+    end_date = request.args.get("end_date")
+    part_number = request.args.get("part_number")
+
+    if start_date:
+        start = datetime.strptime(start_date, "%Y-%m-%d")
+        query = query.filter(StockMovement.date >= start)
+
+    if end_date:
+        end = datetime.strptime(end_date, "%Y-%m-%d")
+        query = query.filter(StockMovement.date <= end)
+
+    if part_number:
+        query = query.filter(
+            Product.product_code.contains(part_number)
+        )
+
+    movements = query.order_by(
         StockMovement.date.desc()
     ).all()
 
+    current_date = datetime.now().strftime("%d/%m/%Y %H:%M")
+
     return render_template(
         "stock_movement_report.html",
-        movements=movements
+        movements=movements,
+        current_date=current_date,
+        start_date=start_date,
+        end_date=end_date,
+        part_number=part_number
     )
 
 
 @app.route("/reports/suppliers")
 def supplier_report():
-    products = Product.query.order_by(Product.supplier, Product.name).all()
+
+    products = Product.query.order_by(
+        Product.supplier,
+        Product.name
+    ).all()
+
+    current_date = datetime.now().strftime("%d/%m/%Y %H:%M")
 
     return render_template(
         "supplier_report.html",
-        products=products
+        products=products,
+        current_date=current_date
     )
 
 
 @app.route("/reports/inventory-audit")
 def inventory_audit_report():
-    products = Product.query.order_by(Product.location, Product.name).all()
+
+    products = Product.query.order_by(
+        Product.location,
+        Product.product_code
+    ).all()
+
+    current_date = datetime.now().strftime("%d/%m/%Y %H:%M")
 
     return render_template(
         "inventory_audit_report.html",
-        products=products
+        products=products,
+        current_date=current_date
     )
-
 
 # Create Database
 with app.app_context():
